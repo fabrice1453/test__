@@ -17,3 +17,29 @@ UNION ALL
             1
         from (select round(sum(mnt1),2) as mnt3 from scinv where idiv = '010' and (lib2 like :chap1 or lib2 like :chap2 or lib2 like :chap3) and dop = to_date(:datep, 'dd/MM/yyyy')) where mnt3 !=0
     );
+
+
+
+SELECT
+
+a.cha[1,1] cha1,a.cha[1,2] cha2,a.age,a.dev,c.tind,a.cha,b.lib,
+
+            SUM(CASE WHEN a.sde<0 THEN a.sde ELSE 0 END) debit,
+
+            SUM(CASE WHEN a.sde>0 THEN a.sde ELSE 0 END) credit,
+
+            SUM(CASE WHEN a.sde<0 THEN a.sde*c.tind ELSE 0 END) debit_cv,
+
+            SUM(CASE WHEN a.sde>0 THEN a.sde*c.tind ELSE 0 END) credit_cv  
+
+FROM bkcom a,bkchap b,bktau c
+
+WHERE a.cha=b.cha  AND a.dev=c.dev
+
+            AND c.dco='25/10/2021'
+
+            AND (c.tind<>0 OR c.courind<>0) 
+
+            AND a.sde<>0 and b.cha between '100000' and '999999'
+
+GROUP BY 1,2,3,4,5,6,7
